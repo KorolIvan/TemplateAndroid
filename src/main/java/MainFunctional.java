@@ -1,4 +1,6 @@
 import com.asprise.ocr.Ocr;
+import dataInfo.ConfigurationProperties;
+import helpers.ToastMessages;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import org.openqa.selenium.By;
@@ -76,14 +78,14 @@ public abstract class MainFunctional {
         }
     }
 
-    protected boolean validToastMessage(String screenName, String toastName) {
+    protected boolean validToastMessage(ToastMessages tm) {
         String result;
-        String toastForCheck = ConfigurationProperties.getProperties(toastName);
-        takeScreenShot(screenName);
-        String imagePath = "./ScreenShots/" + screenName + ".png";
+        String toastForCheck = ConfigurationProperties.getProperty("toasts.properties", tm.getToastName());
+        takeScreenShot(tm.getScreenName());
+        String imagePath = "./ScreenShots/Toast/" + tm.getScreenName() + ".png";
         Ocr.setUp();
         Ocr ocr = new Ocr();
-        ocr.startEngine("fra", Ocr.SPEED_FAST);
+        ocr.startEngine(tm.getLanguage(), Ocr.SPEED_FAST);
         result = ocr.recognize(new File[]{new File(imagePath)}, Ocr.RECOGNIZE_TYPE_TEXT, Ocr.OUTPUT_FORMAT_PLAINTEXT);
         /*System.out.println("result: "+ result);
         System.out.println("For check: "+ toastForCheck);*/
